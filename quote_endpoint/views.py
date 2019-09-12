@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+
+from .models import Quote
+
+import urllib.request
 
 def index(request):
-    DJIA_futures = "Here is the logic for pulling dow jones futures latest price and volume."
-    return HttpResponse(DJIA_futures)
-
-# Create your views here.
+    DJIA_futures = urllib.request.urlopen("https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=YM=F&apikey=K8M3E4D6ZBNJHHHF")
+    context = {'DJIA_futures': DJIA_futures}
+    return render(request, 'quote_endpoint/index.html', context)
