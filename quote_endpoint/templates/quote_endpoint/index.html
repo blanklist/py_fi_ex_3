@@ -1,5 +1,6 @@
 <ul>
-  {% for keys, values in TSLA_date.items %}
+  <li>TSLA</li>
+  {% for keys, values in ticker_history.items %}
     {% for key, value in values.items %}
       {% if key == '4. close' %}
         <li>{{ keys }} Close: {{ value }}</li>

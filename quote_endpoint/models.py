@@ -1,7 +1,7 @@
 from django.db import models
 import requests
 
-# https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=YM=F&apikey=K8M3E4D6ZBNJHHHF
+# https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=APPL&outputsize=full&apikey=K8M3E4D6ZBNJHHHF
 
 class Quote(models.Model):
     symbol = models.CharField(max_length=10)

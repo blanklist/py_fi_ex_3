@@ -1,0 +1,6 @@
+<ul>
+  <li>AAPL</li>
+  {% for keys, values in df_to_json.items %}
+    <li>{{ keys }}: {{ values }}</li>
+  {% endfor %}
+</ul>
