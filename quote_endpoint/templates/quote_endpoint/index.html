@@ -1,5 +1,9 @@
 <ul>
-  {% for price, value in DJIA_futures.items %}
-    <li>{{ price }}: {{ value }}</li>
+  {% for keys, values in TSLA_date.items %}
+    {% for key, value in values.items %}
+      {% if key == '4. close' %}
+        <li>{{ keys }} Close: {{ value }}</li>
+      {% endif %}
+    {% endfor %}
   {% endfor %}
 </ul>
