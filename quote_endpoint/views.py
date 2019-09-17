@@ -12,8 +12,8 @@ def index(request):
     return render(request, 'quote_endpoint/index.html', context)
 
 def graph(request):
-    API_call = Quote.get_quote_data_time_series_daily("AAPL").json()
-    history = API_call['Time Series (Daily)']
+    API_call_2 = Quote.get_quote_data_time_series_daily("AAPL").json()
+    history = API_call_2['Time Series (Daily)']
     df = pd.DataFrame.from_dict(history, orient='index')
     df_to_json = df.to_json(orient='index')
 
