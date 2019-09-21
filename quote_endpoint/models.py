@@ -48,7 +48,8 @@ class Day_to_Day_Volatility(models.Model):   # Measuring percentage change from 
 
         df_close['day_2'] = (df_close['4. close'][1] - df_close['4. close'][0]) / df_close['4. close']
         # the above is not quite there
-
+        day_2_change = map(lambda x, y: (y - x) / x, df_close_to_list, day_2)
+        # the above is much closer
 
         # data frame with closing prices
         # iterate over data frame processing percentage change of one, two, three, four, five days percentage change
