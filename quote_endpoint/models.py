@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 import requests
 import pandas as pd
 # https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=AAPL&outputsize=full&apikey=K8M3E4D6ZBNJHHHF
@@ -40,27 +41,27 @@ class Day_to_Day_Volatility(models.Model):   # Measuring percentage change from 
 
 
     def pct_change(symbol):
-        equity = get_quote_data_time_series_daily(symbol)
+        equity = Day_to_Day_Volatility.get_quote_data_time_series_daily(symbol)
         equity_to_json = equity.json()
         equity_history = equity_to_json[list(equity_to_json.keys())[1]]
         equity_history_df = pd.DataFrame.from_dict(equity_history, orient='index')
         df_close = equity_history_df['4. close'].to_frame()[::-1].astype(float)
         close_to_list = df_close['4. close'].to_list()
-        day_2 = [0] + close_to_list.copy()
-        day_3 = [0, 0] + close_to_list.copy()
-        day_4 = [0, 0, 0] + close_to_list.copy()
-        day_5 = [0, 0, 0, 0] + close_to_list.copy()
-        day_2_change = list(map(lambda x, y: (y - x) / x, close_to_list, day_2))
-        day_3_change = list(map(lambda x, y: (y - x) / x, close_to_list, day_3))
-        day_4_change = list(map(lambda x, y: (y - x) / x, close_to_list, day_4))
-        day_5_change = list(map(lambda x, y: (y - x) / x, close_to_list, day_5))
-        df_close['day_2_pct'] = day_2_change
-        df_close['day_3_pct'] = day_3_change
-        df_close['day_4_pct'] = day_4_change
-        df_close['day_5_pct'] = day_5_change
+        day_2 = [1] + close_to_list.copy()
+        day_3 = [1, 1] + close_to_list.copy()
+        day_4 = [1, 1, 1] + close_to_list.copy()
+        day_5 = [1, 1, 1, 1] + close_to_list.copy()
+        df_close['day_2_pct'] = list(map(lambda x, y: (y - x) / -y, close_to_list, day_2))
+        df_close['day_3_pct'] = list(map(lambda x, y: (y - x) / -y, close_to_list, day_3))
+        df_close['day_4_pct'] = list(map(lambda x, y: (y - x) / -y, close_to_list, day_4))
+        df_close['day_5_pct'] = list(map(lambda x, y: (y - x) / -y, close_to_list, day_5))
+
 
         # data frame with closing prices
         # iterate over data frame processing percentage change of one, two, three, four, five days percentage change
         # populate seperate data frame with percentage change with columns number of days
 
         return df_close
+
+class Form_query_equity(forms.Form):
+    equity = forms.CharField(label="Equity", max_length = 6)

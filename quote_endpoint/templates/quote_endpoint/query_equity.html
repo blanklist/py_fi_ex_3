@@ -1,0 +1,7 @@
+<form method="post" action="{% url "query_equity" %}" >
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <p><input type="submit" value="Enter" /></p>
+</form>

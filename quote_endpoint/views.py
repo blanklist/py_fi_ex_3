@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from .models import Quote
+from django.http import HttpResponse, HttpResponseRedirect
+from .models import Quote, Day_to_Day_Volatility, Form_query_equity
+from .models import Day_to_Day_Volatility
 import json
 import requests
 import pandas as pd
+
 
 def index(request):
     API_call = Quote.get_quote_data_time_series_daily("TSLA").json()
@@ -11,12 +14,22 @@ def index(request):
     context = {'ticker_history': ticker_history}
     return render(request, 'quote_endpoint/index.html', context)
 
-def pct_change(request):
+def pct_change_view(request, equity):
+    pct_change = Day_to_Day_Volatility.pct_change(equity)
+    pct_change_to_html = pct_change.to_html()
+    context = {'pct_change_to_html': pct_change_to_html}
+    return render(request, 'quote_endpoint/pct_change_view.html', context)
 
-    history = API_call_2['Time Series (Daily)']
-    df = pd.DataFrame.from_dict(history, orient='index')
-    df_to_json = df.to_json(orient='index')
-
-    context = {'df_to_json': df_to_json}
-    # context = {'df': df}
-    return render(request, 'quote_endpoint/graph.html', context)
+def query_equity(request):
+    if request.POST:
+        form = Form_query_equity(request.POST)
+        if form.is_valid():
+            equity = form.cleaned_data['equity']
+            # return HttpResponseRedirect('pct_change_view', {'equity': equity})
+            return render(request, 'quote_endpoint/pct_change_view.html', {'equity': equity})
+            # return HttpResponse("Equity added")
+        else:
+            return render(request, 'quote_endpoint/query_equity.html', {'form': form})
+    else:
+        form = Form_query_equity()
+        return render(request, 'quote_endpoint/query_equity.html', {'form': form})
