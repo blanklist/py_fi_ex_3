@@ -11,7 +11,7 @@ class Quote(models.Model):
     low = models.IntegerField(default=0)
     price = models.IntegerField(default=0)
     volume = models.IntegerField(default=0)
-    latest_trading_date = models.DateTimeField('latest trading date')
+    # latest_trading_date = models.DateTimeField('latest trading date')
     previous_close = models.IntegerField(default=0)
     change = models.IntegerField(default=0)
     change_percent = models.IntegerField(default=0)
@@ -63,5 +63,14 @@ class Day_to_Day_Volatility(models.Model):   # Measuring percentage change from 
 
         return df_close
 
-class Form_query_equity(forms.Form):
-    equity = forms.CharField(label="Equity", max_length = 6)
+from django.forms import ModelForm
+
+class Equity(models.Model):
+    equity = models.CharField(max_length = 6)
+    class Meta:
+        db_table = "equity"
+
+class Form_query_equity(ModelForm):
+    class Meta:
+        model = Equity
+        fields = '__all__'
